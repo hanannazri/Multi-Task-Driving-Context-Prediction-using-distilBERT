@@ -16,3 +16,7 @@ sample = train_dataset[0]
 print(sample["intent_label"], sample["intent_label"].dtype)
 print(sample["emotion_label"])
 print(sample["mode_label"])
+
+# DataLoaders
+train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+val_loader   = DataLoader(val_dataset, batch_size=16,shuffle = False)
