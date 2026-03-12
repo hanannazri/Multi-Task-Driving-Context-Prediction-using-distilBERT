@@ -1,16 +1,7 @@
-**System check**
-"""
+"""**Import**"""
 
 import transformers, torch, sys
 
-print("Python:", sys.version)
-print("Transformers:", transformers.__version__)
-print("Torch:", torch.__version__)
-
-"""**Import**"""
-
-import transformers
-import torch
 import torch.nn as nn
 from transformers import DistilBertTokenizerFast
 from transformers import DistilBertModel
@@ -18,28 +9,18 @@ from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from sklearn.preprocessing import LabelEncoder
 from datasets import Dataset
-import tensorflow as tf
 import pandas as pd
-import json
-import gc
 import os
 import pickle
 from sklearn.utils.class_weight import compute_class_weight
 import numpy as np
 from sklearn.model_selection import train_test_split
 from transformers import get_linear_schedule_with_warmup
-import re
 import nltk
-from nltk.corpus import stopwords
-nltk.download('stopwords')
-stopw = stopwords.words('english')
 import torch.nn.functional as F
 import seaborn as sns
 import matplotlib.pyplot as plt
-from plotly.offline import iplot
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import ConfusionMatrixDisplay
-from tqdm import tqdm
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 """Extracting File"""
 
