@@ -225,7 +225,7 @@ This enables direct loading for inference or edge deployment. Model saving imple
 
 ### Directions to run the code
 1. Unzip the whole repository and make it your current directory 
-2. Install all the required dependencies using the requirments.txt file
+2. Install all the required dependencies using the pip install -r requirements.txt
 3. Run the training script: python distilbert_training.py
 
 The pipeline will automatically: 
