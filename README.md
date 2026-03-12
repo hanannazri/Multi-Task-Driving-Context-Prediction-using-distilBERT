@@ -1,4 +1,4 @@
-# Multi-Task-Driving-Context-Prediction-using-distilBERT
+# *Multi-Task-Driving-Context-Prediction-using-distilBERT
 
 A Multi-Task NLP System built with DistilBERT that understands driver commands and automatically determines:
 
@@ -10,7 +10,7 @@ This project enables AI-powered personalized driving experiences by dynamically 
 
 The model is designed for Agentic AI-based Advanced Driver Assistance Systems (ADAS) where the system intelligently decides the appropriate driving strategy instead of blindly executing commands.
 
-# Project Overview
+## *Project Overview
 
 Modern vehicles increasingly rely on voice interfaces and intelligent assistants. However, most systems only perform single-task intent detection.
 
@@ -21,11 +21,13 @@ This project introduces a Multi-Task Transformer Architecture that simultaneousl
 | **Intent Classification**  | Understand the driver’s objective (e.g., urgency, fuel management, traffic avoidance) |
 | **Emotion Detection**      | Detect emotional context (relaxed, stressed, etc.)                                    |
 | **Driving Mode Selection** | Determine the optimal driving behavior                                                |
+
 Instead of training three separate models, the system uses one shared DistilBERT encoder with three specialized classification heads.
 
 This approach improves efficiency, contextual understanding, inference speed and shared linguistic representation.
 
-🏗 System Architecture
+## *System Architecture
+
 Driver Speech / Command
           │
           ▼
@@ -39,101 +41,75 @@ Driver Speech / Command
  ▼        ▼         ▼
 Intent   Emotion   Mode
  Head     Head      Head
-Outputs
+
 Sentence → 3 Predictions
 
-"I am getting late to the office"
+Example : "I am getting late to the office"
 
 Intent   → Office Rush
 Emotion  → Stressed
 Mode     → Priority Mode
-📊 Dataset
 
-The dataset contains natural driving commands annotated with:
+## *Dataset
 
-Intent
-
-Emotion
-
-Driving Mode
+The dataset contains natural driving commands annotated with Intent, Emotion & Driving Mode
 
 Example dataset format:
 
-Sentence	Intent	Emotion	Driving Mode
-Take the fastest route	urgency	stressed	priority mode
-Petrol is running low	fuel management	relaxed	eco mode
-Let’s enjoy the scenery	scenic drive	relaxed	comfort mode
-Dataset Preprocessing
+| Sentence                | Intent          | Emotion  | Driving Mode  |
+| ----------------------- | --------------- | -------- | ------------- |
+| Take the fastest route  | urgency         | stressed | priority mode |
+| Petrol is running low   | fuel management | relaxed  | eco mode      |
+| Let’s enjoy the scenery | scenic drive    | relaxed  | comfort mode  |
+
+
+## *Dataset Preprocessing
 
 The dataset undergoes:
 
-text normalization
-
-label cleaning
-
-emotion merging
-
-duplicate removal
-
-class balancing
-
-Example cleaning operations:
-
-happy → calm
-
-calm → relaxed
-
-remove angry samples
+- text normalization
+- label cleaning
+- emotion merging
+- duplicate removal
+- class balancing
 
 Word length distribution and class distributions are visualized during EDA.
 
-🔬 Exploratory Data Analysis
+## *Exploratory Data Analysis
 
 The training pipeline includes:
 
-Word count distribution
-
-Intent frequency visualization
-
-Emotion distribution
-
-Driving mode distribution
+- Word count distribution
+- Intent frequency visualization
+- Emotion distribution
+- Driving mode distribution
 
 These analyses help understand dataset imbalance and guide model design.
 
-⚙️ Model Architecture
+## *Model Architecture
 
 The model is implemented using PyTorch and HuggingFace Transformers.
 
-Base Model
-distilbert-base-uncased
+Base Model: distilbert-base-uncased
 
-DistilBERT provides:
-
-lightweight architecture
-
-faster inference
-
-lower memory usage
-
-strong contextual embeddings
+DistilBERT provides lightweight architecture, faster inference, lower memory usage and strong contextual embeddings
 
 Multi-Task Model
 
 A custom PyTorch model with three classification heads.
 
-DistilBERT
-     │
-     ▼
- Sentence Embedding
-     │
-     ▼
- Dropout
-     │
- ┌───┼───────────────┐
- ▼   ▼               ▼
-Intent Head    Emotion Head    Mode Head
-Linear Layer   Linear Layer    Linear Layer
+                     DistilBERT
+                         │
+                         ▼
+                 Sentence Embedding
+                         │
+                         ▼
+                      Dropout
+                         │
+       ┌─────────────────┼───────────────┐
+       ▼                 ▼               ▼
+     Intent Head    Emotion Head     Mode Head
+     Linear Layer   Linear Layer    Linear Layer
 
 Each head independently predicts its label.
 
