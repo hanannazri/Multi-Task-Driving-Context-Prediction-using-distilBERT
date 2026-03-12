@@ -252,4 +252,4 @@ The pipeline will automatically:
 
 ### Author
 Hanan
-Machine Learning Enthusiast
+- Machine Learning Enthusiast
