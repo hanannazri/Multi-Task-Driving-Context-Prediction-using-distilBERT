@@ -224,9 +224,13 @@ The trained model and preprocessing components are stored for deployment.
 This enables direct loading for inference or edge deployment. Model saving implementation is provided in the training script. 
 
 ### Directions to run the code
+
 1. Unzip the whole repository and make it your current directory 
 2. Install all the required dependencies using the pip install -r requirements.txt
-3. Run the training script: python distilbert_training.py
+3. Run the file in the following order:
+
+                   imports → eda → encoding_split → tokenization → dataloader → model
+                               → training → prediction → evaluation → savemodel
 
 The pipeline will automatically: 
 - Load dataset
