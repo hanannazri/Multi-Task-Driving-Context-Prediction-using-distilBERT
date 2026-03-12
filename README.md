@@ -1,4 +1,4 @@
-# *Multi-Task-Driving-Context-Prediction-using-distilBERT
+# Multi-Task-Driving-Context-Prediction-using-distilBERT
 
 A Multi-Task NLP System built with DistilBERT that understands driver commands and automatically determines:
 
@@ -10,7 +10,7 @@ This project enables AI-powered personalized driving experiences by dynamically 
 
 The model is designed for Agentic AI-based Advanced Driver Assistance Systems (ADAS) where the system intelligently decides the appropriate driving strategy instead of blindly executing commands.
 
-## *Project Overview
+## Project Overview
 
 Modern vehicles increasingly rely on voice interfaces and intelligent assistants. However, most systems only perform single-task intent detection.
 
@@ -26,21 +26,21 @@ Instead of training three separate models, the system uses one shared DistilBERT
 
 This approach improves efficiency, contextual understanding, inference speed and shared linguistic representation.
 
-## *System Architecture
+## System Architecture
 
-Driver Speech / Command
-          │
-          ▼
-   Text Processing
-          │
-          ▼
-     DistilBERT Encoder
-(shared contextual representation)
-          │
- ┌────────┼─────────┐
- ▼        ▼         ▼
-Intent   Emotion   Mode
- Head     Head      Head
+                                Driver Speech / Command
+                                             │
+                                             ▼
+                                      Text Processing
+                                             │
+                                             ▼
+                                    DistilBERT Encoder
+                           (shared contextual representation)
+                                             │
+                                    ┌────────┼─────────┐
+                                    ▼        ▼         ▼
+                                   Intent   Emotion   Mode
+                                   Head     Head      Head
 
 Sentence → 3 Predictions
 
@@ -50,7 +50,7 @@ Intent   → Office Rush
 Emotion  → Stressed
 Mode     → Priority Mode
 
-## *Dataset
+## Dataset
 
 The dataset contains natural driving commands annotated with Intent, Emotion & Driving Mode
 
@@ -63,7 +63,7 @@ Example dataset format:
 | Let’s enjoy the scenery | scenic drive    | relaxed  | comfort mode  |
 
 
-## *Dataset Preprocessing
+## Dataset Preprocessing
 
 The dataset undergoes:
 
@@ -75,7 +75,7 @@ The dataset undergoes:
 
 Word length distribution and class distributions are visualized during EDA.
 
-## *Exploratory Data Analysis
+## Exploratory Data Analysis
 
 The training pipeline includes:
 
@@ -84,9 +84,33 @@ The training pipeline includes:
 - Emotion distribution
 - Driving mode distribution
 
+<p align="center">
+  <img src="images/architecture.png" width="700"/>
+</p>
+
+<p align="center">
+  <em>Figure 1: Intent Frequency Visualisation</em>
+</p>
+
+<p align="center">
+  <img src="images/architecture.png" width="700"/>
+</p>
+
+<p align="center">
+  <em>Figure 2: Emotion distribution</em>
+</p>
+
+<p align="center">
+  <img src="images/architecture.png" width="700"/>
+</p>
+
+<p align="center">
+  <em>Figure 3: Driving mode distribution</em>
+</p>
+
 These analyses help understand dataset imbalance and guide model design.
 
-## *Model Architecture
+## Model Architecture
 
 The model is implemented using PyTorch and HuggingFace Transformers.
 
@@ -94,221 +118,134 @@ Base Model: distilbert-base-uncased
 
 DistilBERT provides lightweight architecture, faster inference, lower memory usage and strong contextual embeddings
 
-Multi-Task Model
+*Multi-Task Model*
 
 A custom PyTorch model with three classification heads.
 
-                     DistilBERT
-                         │
-                         ▼
-                 Sentence Embedding
-                         │
-                         ▼
-                      Dropout
-                         │
-       ┌─────────────────┼───────────────┐
-       ▼                 ▼               ▼
-     Intent Head    Emotion Head     Mode Head
-     Linear Layer   Linear Layer    Linear Layer
+                                         DistilBERT
+                                              │
+                                              ▼
+                                    Sentence Embedding
+                                              │
+                                              ▼
+                                           Dropout
+                                              │
+                            ┌─────────────────┼───────────────┐
+                            ▼                 ▼               ▼
+                          Intent Head    Emotion Head     Mode Head
+                          Linear Layer   Linear Layer    Linear Layer
 
-Each head independently predicts its label.
+Each head independently predicts its label. This design enables shared learning across tasks.
 
-This design enables shared learning across tasks.
+### Hyperparameters
+| Parameter           | Value      |
+| ------------------- | ---------- |
+| Model               | DistilBERT |
+| Max Sequence Length | 32         |
+| Batch Size          | 16         |
+| Epochs              | 8          |
+| Learning Rate       | 2e-5       |
+| Optimizer           | AdamW      |
+| Dropout             | 0.3        |
 
-🧪 Training Strategy
-Train / Validation Split
-80% Training
-10% Validation
-10% Test
-Hyperparameters
-Parameter	Value
-Model	DistilBERT
-Max Sequence Length	32
-Batch Size	16
-Epochs	8
-Learning Rate	2e-5
-Optimizer	AdamW
-Dropout	0.3
-Multi-Task Loss Function
+### Multi-Task Loss Function
 
 Each task has its own loss.
 
-Total Loss =
-1.2 × Intent Loss
-+ 1.5 × Mode Loss
-+ 0.8 × Emotion Loss
+                       Total Loss = 1.2 × Intent Loss + 1.5 × Mode Loss + 0.8 × Emotion Loss
 
 Mode prediction is weighted higher because it directly affects vehicle behavior.
 
-Class Imbalance Handling
+### Class Imbalance Handling
 
-Driving mode imbalance is handled using:
+- Driving mode imbalance is handled using compute_class_weight()
+- This prevents the model from favoring dominant modes.
 
-compute_class_weight()
-
-This prevents the model from favoring dominant modes.
-
-📈 Evaluation
+## Evaluation
 
 Evaluation includes confusion matrix analysis for driving modes.
 
-Example evaluation pipeline:
+<p align="center">
+  <img src="images/architecture.png" width="700"/>
+</p>
 
-True Modes vs Predicted Modes
-→ Confusion Matrix
-→ Visualization
+<p align="center">
+  <em>Figure 4: Confusion matrix of mode </em>
+</p>
 
-This helps identify:
+<p align="center">
+  <img src="images/architecture.png" width="700"/>
+</p>
 
-misclassification patterns
+<p align="center">
+  <em>Figure 5: Confusion matrix of emotion </em>
+</p>
 
-overlapping intents
+<p align="center">
+  <img src="images/architecture.png" width="700"/>
+</p>
 
-weak class boundaries
+<p align="center">
+  <em>Figure 5: Confusion matrix of intent </em>
+</p>
 
-🔮 Example Predictions
-Input:
-"I am getting late to the office"
+## Example Predictions
 
+Input: "I am getting late to the office"
 Output:
 Intent   : Office Rush
 Emotion  : Stressed
 Mode     : Priority Mode
-Input:
-"Petrol is running low"
 
+Input: "Petrol is running low"
 Output:
 Intent   : Fuel Management
 Emotion  : Relaxed
 Mode     : Eco Mode
-Input:
-"Relax, let me enjoy the view"
 
+Input: "Relax, let me enjoy the view"
 Output:
 Intent   : Scenic Drive
 Emotion  : Relaxed
 Mode     : Comfort Mode
 
-Prediction is implemented through the predict() function. 
-
-distilbert_training (4)
-
-💾 Model Saving
+## Model Saving
 
 The trained model and preprocessing components are stored for deployment.
 
-Saved artifacts:
+                                   saved_model/
+                                   │
+                                   ├── model.pt
+                                   ├── tokenizer/
+                                   ├── intent_encoder.pkl
+                                   ├── emotion_encoder.pkl
+                                   └── mode_encoder.pkl
 
-saved_model/
-│
-├── model.pt
-├── tokenizer/
-├── intent_encoder.pkl
-├── emotion_encoder.pkl
-└── mode_encoder.pkl
+This enables direct loading for inference or edge deployment. Model saving implementation is provided in the training script. 
 
-This enables direct loading for inference or edge deployment.
+Directions to run the code
+1. Unzip the whole repository and make it your current directory 
+2. Install all the required dependencies using the requirments.txt file
+3. Run the training script: python distilbert_training.py
 
-Model saving implementation is provided in the training script. 
+The pipeline will automatically: 
+- Load dataset
+- Preprocess text
+- Train DistilBERT
+- Evaluate predictions
+- Save the trained model
 
-distilbert_training (4)
+## Technologies Used
 
-🛠 Installation
-Clone Repository
-git clone https://github.com/yourusername/drivelikeme-ai.git
-cd drivelikeme-ai
-Install Dependencies
-pip install torch
-pip install transformers
-pip install datasets
-pip install scikit-learn
-pip install pandas
-pip install seaborn
-pip install matplotlib
-pip install nltk
-▶️ Training the Model
+- Python
+- PyTorch
+- HuggingFace Transformers
+- DistilBERT
+- Scikit-Learn
+- NLTK
+- Pandas
+- Matplotlib / Seaborn
 
-Run the training script:
-
-python distilbert_training.py
-
-The pipeline will automatically:
-
-Load dataset
-
-Preprocess text
-
-Train DistilBERT
-
-Evaluate predictions
-
-Save the trained model
-
-🚀 Deployment (Edge Devices)
-
-The saved model can be deployed on:
-
-Raspberry Pi
-
-Edge AI modules
-
-In-vehicle infotainment systems
-
-Typical deployment pipeline:
-
-Microphone → Speech to Text
-               │
-               ▼
-           NLP Model
-               │
-               ▼
-        Driving Mode Controller
-🔮 Future Improvements
-
-Planned improvements include:
-
-🎤 Real-time voice command integration
-
-🧠 Emotion recognition from speech
-
-🚘 Integration with ADAS control systems
-
-⚡ Model quantization for edge deployment
-
-📡 Agentic AI decision layer
-
-📚 Technologies Used
-
-Python
-
-PyTorch
-
-HuggingFace Transformers
-
-DistilBERT
-
-Scikit-Learn
-
-NLTK
-
-Pandas
-
-Matplotlib / Seaborn
-
-🎓 Research Contribution
-
-This project demonstrates:
-
-Multi-Task NLP for automotive systems
-
-Emotion-aware driving assistance
-
-Transformer-based intent recognition
-
-Personalized vehicle behavior
-
-👨‍💻 Author
-
+### Author
 Hanan
-
-AI Research & Machine Learning Enthusiast
+Machine Learning Enthusiast
